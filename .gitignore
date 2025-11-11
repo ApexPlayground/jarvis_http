@@ -1,0 +1,50 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Build output directories
+bin/
+build/
+dist/
+
+# Test binaries and coverage files
+*.test
+*.out
+coverage.*
+
+# Dependency and module caches
+vendor/
+*.modcache
+
+# IDE and editor folders
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Go workspace files
+go.work
+go.work.sum
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Environment / configuration 
+.env
+.env.local
+.env.*.local
+
+
+*.launch.json
+*.run.xml
+
+
+jarvis_http
