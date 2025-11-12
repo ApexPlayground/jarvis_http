@@ -3,7 +3,8 @@ package server
 import (
 	"fmt"
 	"net"
-	"time"
+
+	"github.com/apexplayground/jarvis_http/handler"
 )
 
 func Start() {
@@ -13,6 +14,7 @@ func Start() {
 		fmt.Print("Error listening", err)
 	}
 	defer listener.Close()
+
 	fmt.Println("Server running on :8080")
 
 	for {
@@ -30,21 +32,27 @@ func handleConnection(conn net.Conn) {
 	// close connection at end
 	defer conn.Close()
 
-	conn.SetReadDeadline(time.Now().Add(20 * time.Second))
-
-	buffer := make([]byte, 1024) // make slice of 1kb
-	for {
-		n, err := conn.Read(buffer)
-		if err != nil {
-			fmt.Print("Error reading byte:", err)
-			break
-		}
-		fmt.Printf("Read byte: %s", buffer[:n])
-		conn.Write([]byte("Message received\n"))
-
-		// Reset the timeout after receiving data
-		conn.SetReadDeadline(time.Now().Add(20 * time.Second))
-
+	req, err := handler.ParseHttp(conn)
+	if err != nil {
+		fmt.Print("error parsing http", err)
+		return
 	}
+
+	fmt.Println("Method:", req.Method)
+	fmt.Println("Path:", req.Path)
+	fmt.Println("Version:", req.Version)
+	fmt.Println("Headers:", req.Headers)
+
+	body := "hello world"
+
+	response := fmt.Sprintf(
+		"HTTP/1.1 200 OK\r\n"+
+			"Content-Type: text/plain\r\n"+
+			"Content-Length: %d\r\n"+
+			"\r\n"+
+			"%s",
+		len(body), body)
+
+	conn.Write([]byte(response))
 
 }
